@@ -1,4 +1,4 @@
-class Base:
+class base:
     cmd_list =  {
                 "00001":"pwd",
                 "00002":"ls",
@@ -6,3 +6,4 @@ class Base:
  
     def __init__(self,Net):
         self.Net = ''
+        pass

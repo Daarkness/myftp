@@ -10,7 +10,7 @@ import pdb
 __all__ = ["nbNet", "sendData_mh"]
 #DEBUG = True
 
-from nbNetUtils import *
+from nbNet.nbNetUtils import *
 
 class nbNetBase:
     '''non-blocking Net'''
@@ -113,7 +113,8 @@ class nbNetBase:
         last_have_send = sock_state.have_write
         try:
                 # to send some Bytes, but have_send is the return num of .send()
-            have_send = conn.send(sock_state.buff_write[last_have_send:])
+            row_data = bytes(sock_state.buff_write[last_have_send:],encoding='utf-8')
+            have_send = conn.send(row_data)
             sock_state.have_write += have_send
             sock_state.need_write -= have_send
             if sock_state.need_write == 0 and sock_state.have_write != 0:
@@ -258,7 +259,7 @@ class nbNet(nbNetBase):
             # closing directly when error.
             self.state_machine(fd)
     
-counter = 0
+
 if __name__ == '__main__':
     
     def logic(d_in):

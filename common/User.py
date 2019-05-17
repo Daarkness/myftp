@@ -1,5 +1,5 @@
 import hashlib
-import user_exceptions
+from common import user_exceptions
 
 class Authenticator:
     def __init__(self):
