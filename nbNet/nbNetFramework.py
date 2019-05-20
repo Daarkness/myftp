@@ -53,13 +53,13 @@ class nbNetBase:
     def read(self, fd):
         """fd is fileno() of socket"""
         #pdb.set_trace()
-        print("to read")
+       # print("to read")
         try:
             sock_state = self.conn_state[fd]
-            print(sock_state)
+           # print(sock_state)
             conn = sock_state.sock_obj
             if sock_state.need_read <= 0:
-                print("-----need_read < 0")
+                #print("-----need_read < 0")
                 raise socket.error
             one_read = conn.recv(sock_state.need_read)
             res_read = str(one_read,encoding='utf-8')
@@ -68,14 +68,14 @@ class nbNetBase:
                 raise socket.error
      
             # process received data
-            print('-----',sock_state.buff_read,sock_state.have_read,sock_state.need_read)
+            #print('-----',sock_state.buff_read,sock_state.have_read,sock_state.need_read)
             sock_state.buff_read += res_read
             sock_state.have_read += len(one_read)
             sock_state.need_read -= len(one_read)
             #sock_state.printState()
 
             # read protocol header
-            print('00000000',sock_state.buff_read,sock_state.have_read,sock_state.need_read)
+            #print('00000000',sock_state.buff_read,sock_state.have_read,sock_state.need_read)
             if sock_state.have_read == 10:
             
                 header_said_need_read = int(sock_state.buff_read)
@@ -94,7 +94,7 @@ class nbNetBase:
             else:
                 return "readmore"
         except (socket.error, ValueError) as msg:
-            print ("msg {}".format(msg))
+            #print ("msg {}".format(msg))
             try:
                 if msg.errno == 11:
                     #dbgPrint("11 " + msg)
@@ -139,8 +139,8 @@ class nbNetBase:
             epoll_list = self.epoll_sock.poll()
             for fd, events in epoll_list:
                 #dbgPrint('\n-- run epoll return fd: %d. event: %s' % (fd, events))
-                print ("---",self.conn_state)
-                print (fd, events)
+                #print ("---",self.conn_state)
+                #print (fd, events)
                 sock_state = self.conn_state[fd]
                 if select.EPOLLHUP & events: 
                     #dbgPrint("EPOLLHUP")
@@ -180,7 +180,7 @@ class nbNet(nbNetBase):
 
     #@profile
     def process(self, fd):
-        print("-------------------------------------")
+       # print("-------------------------------------")
         sock_state = self.conn_state[fd]
         response = self.logic(sock_state.buff_read)
         #pdb.set_trace()
@@ -219,7 +219,7 @@ class nbNet(nbNetBase):
             read_ret = self.read(fd)
         except (Exception) as  msg:
             #dbgPrint(msg)
-            print(msg)
+           # print(msg)
             read_ret = "closing"
         if read_ret == "process":
             # recv complete, change state to process it

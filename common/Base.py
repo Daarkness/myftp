@@ -4,6 +4,7 @@ class base:
                 "00002":"ls",
         }
  
-    def __init__(self,Net):
-        self.Net = ''
-        pass
+    def __init__(self,Authenticator,file_contor):
+        self.Auth = Authenticator
+        self.File_Contor = file_contor 
+        

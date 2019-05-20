@@ -7,7 +7,8 @@ class Authenticator:
         self.users = {}
     
     def add_user(self,username,password):
-        if username in users:
+
+        if username in self.users:
             raise UsernameAlreadyExists
         self.users[username]= User(username,password)
     
@@ -28,6 +29,7 @@ class Authenticator:
             raise InvalidUsername(username)
         user.is_logged_in = False 
         return True
+
 class User:
     #用户类
     def __init__(self,username,password):
