@@ -5,7 +5,7 @@ users = {
 }
 
 #ftp-server path
-changeroot = "/data"
+work_path = "/home/rico/data"
 
 server ={
     'ip':'127.0.0.1',
