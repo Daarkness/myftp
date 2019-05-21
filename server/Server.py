@@ -18,7 +18,8 @@ class Server(base):
         self.port = port 
         self._Net_model =  nbNetFramework.nbNet
         super().__init__(User.Authenticator(),File_contor.file_contor(work_path))
-
+ 
+ 
     def _User_load(self,users_dict):
         for username,password in users_dict.items():
             try:
