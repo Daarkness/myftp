@@ -20,4 +20,4 @@ class base:
         self.Auth = Authenticator
         self.File_Contor = file_contor 
         #self.Work = work
-        
+        self._user_file = {}

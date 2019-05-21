@@ -36,6 +36,7 @@ class User:
         self.username = username 
         self.password = self._encrypt_pw(password)
         self.is_logined = False
+        self.home_path = ''
 
     def _encrypt_pw(self,password):
         hash_str = (self.username+password)
