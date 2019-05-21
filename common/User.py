@@ -34,7 +34,7 @@ class User:
     #用户类
     def __init__(self,username,password):
         self.username = username 
-        self.password = password
+        self.password = self._encrypt_pw(password)
         self.is_logined = False
 
     def _encrypt_pw(self,password):
@@ -45,3 +45,4 @@ class User:
     def checkpassword(self,password):
         encrypted = self._encrypt_pw(password)
         return encrypted == self.password  
+    
