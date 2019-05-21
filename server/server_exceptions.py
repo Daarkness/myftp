@@ -1,4 +1,3 @@
- 
 
 class  InitExceptions(Exception):
     def __init__(self,stepname):
