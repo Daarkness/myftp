@@ -10,8 +10,9 @@ class View:
     def get_user_msg(self):
         username = input("Please input your username:") 
         password =  input("Please input your Password:") 
+        print("====================================")
         return username,password 
-
+        
     
 
                                                                                                                              
