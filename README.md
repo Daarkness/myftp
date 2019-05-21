@@ -1,2 +1,2 @@
-# 用python实现的简答ftp服务器
+# 用python实现的简单ftp服务器
 
