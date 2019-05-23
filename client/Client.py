@@ -15,18 +15,16 @@ class Agent(base):
     def __init__(self):
         super().__init__(file_contor=File_contor.file_contor)
         self._Net_model =  Client_Net.clinet_net(server['host'],server['port'])
-
+        self.send_data={} 
 
     def login(self,User):
-        send_msg = {
-            "code": "00001",
-            "data": {
+        self.send_data['code'] = '00001'
+        self.send_data['data'] = {
                 "username":User.username,
-                "password":User.password
-            }
-        }
-        self._Net_model.sendData(json.dumps(send_msg))
-        print(send_msg)
+                "password":User.password }
+
+        res_data =  self._Net_model.sendData(json.dumps(self.send_data))
+        print("RES Data:{}".format(res_data))
         
 
 
