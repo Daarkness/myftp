@@ -10,7 +10,7 @@ import pdb
 __all__ = ["nbNet", "sendData_mh"]
 #DEBUG = True
 
-from nbNet.nbNetUtils import *
+from nbNetUtils import *
 
 class nbNetBase:
     '''non-blocking Net'''
@@ -23,7 +23,7 @@ class nbNetBase:
         #self.conn_state[sock.fileno()].printState()
         #dbgPrint("\n -- setFd end!")
 
-    def accept(self, fd): 
+    def accept(self, fd):
         """fd is fileno() of socket"""
         #dbgPrint("\n -- accept start!")
         sock_state = self.conn_state[fd]
@@ -32,7 +32,7 @@ class nbNetBase:
         # set to non-blocking: 0
         conn.setblocking(0)
         return conn
-    
+
     def close(self, fd):
         """fd is fileno() of socket"""
         #pdb.set_trace()
@@ -53,20 +53,26 @@ class nbNetBase:
     def read(self, fd):
         """fd is fileno() of socket"""
         #pdb.set_trace()
-       # print("to read")
+        print("to read")
         try:
+            print("start read")
             sock_state = self.conn_state[fd]
-           # print(sock_state)
+            print(sock_state)
             conn = sock_state.sock_obj
             if sock_state.need_read <= 0:
-                #print("-----need_read < 0")
+                print("-----need_read < 0")
                 raise socket.error
             one_read = conn.recv(sock_state.need_read)
-            res_read = str(one_read,encoding='utf-8')
+
+            print("----",type(one_read))
+            res_read = one_read
+            print(res_read,"-------------")
             #dbgPrint("\tread func fd: %d, one_read: %s, need_read: %d" % (fd, one_read, sock_state.need_read))
+
+            print("res_read:{}".format(res_read))
             if len(one_read) == 0:
                 raise socket.error
-     
+
             # process received data
             #print('-----',sock_state.buff_read,sock_state.have_read,sock_state.need_read)
             sock_state.buff_read += res_read
@@ -77,14 +83,14 @@ class nbNetBase:
             # read protocol header
             #print('00000000',sock_state.buff_read,sock_state.have_read,sock_state.need_read)
             if sock_state.have_read == 10:
-            
+
                 header_said_need_read = int(sock_state.buff_read)
                 if header_said_need_read <= 0:
                     raise socket.error
                 sock_state.need_read += header_said_need_read
                 sock_state.buff_read = ''
-                # call state machine, current state is read. 
-                # after protocol header haven readed, read the real cmd content, 
+                # call state machine, current state is read.
+                # after protocol header haven readed, read the real cmd content,
                 # call machine instead of call read() it self in common.
                 #sock_state.printState()
                 return "readcontent"
@@ -94,7 +100,7 @@ class nbNetBase:
             else:
                 return "readmore"
         except (socket.error, ValueError) as msg:
-            #print ("msg {}".format(msg))
+            print ("msg {}".format(msg))
             try:
                 if msg.errno == 11:
                     #dbgPrint("11 " + msg)
@@ -102,18 +108,18 @@ class nbNetBase:
             except:
                 pass
             return 'closing'
-        
+
 
     #@profile
     def write(self, fd):
         sock_state = self.conn_state[fd]
         conn = sock_state.sock_obj
         #pdb.set_trace()
-  
+
         last_have_send = sock_state.have_write
         try:
                 # to send some Bytes, but have_send is the return num of .send()
-            row_data = bytes(sock_state.buff_write[last_have_send:],encoding='utf-8')
+            row_data = bytes(sock_state.buff_write[last_have_send:])
             have_send = conn.send(row_data)
             sock_state.have_write += have_send
             sock_state.need_write -= have_send
@@ -142,7 +148,7 @@ class nbNetBase:
                 #print ("---",self.conn_state)
                 #print (fd, events)
                 sock_state = self.conn_state[fd]
-                if select.EPOLLHUP & events: 
+                if select.EPOLLHUP & events:
                     #dbgPrint("EPOLLHUP")
                     sock_state.state = "closing"
                 elif select.EPOLLERR & events:
@@ -189,7 +195,7 @@ class nbNet(nbNetBase):
             self.setFd(conn)
             self.conn_state[fd].state = "read"
             self.epoll_sock.modify(fd, select.EPOLLIN)
-        else:  
+        else:
             sock_state.buff_write = "%010d%s" % (len(response), response)
             sock_state.need_write = len(sock_state.buff_write)
             #sock_state.printState()
@@ -197,13 +203,13 @@ class nbNet(nbNetBase):
             sock_state.state = "write"
             self.epoll_sock.modify(fd, select.EPOLLOUT)
 
-             
+
 
     #@profile
     def accept2read(self, fd):
         conn = self.accept(fd)
         self.epoll_sock.register(conn.fileno(), select.EPOLLIN)
-        # new client connection fd be initilized 
+        # new client connection fd be initilized
         self.setFd(conn)
         self.conn_state[conn.fileno()].state = "read"
         # now end of accept, but the main process still on 'accept' status
@@ -258,14 +264,14 @@ class nbNet(nbNetBase):
             self.conn_state[fd].state = 'closing'
             # closing directly when error.
             self.state_machine(fd)
-    
+
 
 if __name__ == '__main__':
-    
+
     def logic(d_in):
-        
+
         return(d_in)
 
-    
+
     reverseD = nbNet('0.0.0.0', 9099, logic)
     reverseD.run()
