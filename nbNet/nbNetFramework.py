@@ -65,7 +65,9 @@ class nbNetBase:
             one_read = conn.recv(sock_state.need_read)
 
             print("----",type(one_read))
-            res_read = one_read
+            res_read = one_read.decode('utf-8')
+
+
             print(res_read,"-------------")
             #dbgPrint("\tread func fd: %d, one_read: %s, need_read: %d" % (fd, one_read, sock_state.need_read))
 
@@ -119,8 +121,9 @@ class nbNetBase:
         last_have_send = sock_state.have_write
         try:
                 # to send some Bytes, but have_send is the return num of .send()
-            row_data = bytes(sock_state.buff_write[last_have_send:])
-            have_send = conn.send(row_data)
+            row_data = sock_state.buff_write[last_have_send:]
+            print(row_data)
+            have_send = conn.send(row_data.encode('utf-8'))
             sock_state.have_write += have_send
             sock_state.need_write -= have_send
             if sock_state.need_write == 0 and sock_state.have_write != 0:
