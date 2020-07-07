@@ -10,7 +10,7 @@ import pdb
 __all__ = ["nbNet", "sendData_mh"]
 #DEBUG = True
 
-from nbNetUtils import *
+from .nbNetUtils import *
 
 class nbNetBase:
     '''non-blocking Net'''

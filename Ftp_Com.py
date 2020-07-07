@@ -7,9 +7,16 @@ class Ftp_Common:
     def __init__(self,base_path):
 
         self.Base_Path = base_path
-        print(self.Base_Path)
-        pass
+        '''
+        self.msg = {
+            "id":xxxxx,
+            "msg":xxxxxx,
+            "token":xxxxxx,
+        '''
+        self.files = {}
 
+
+    '''
     def get_msg_type(self,file_path):
         if os.path.exists(file_path):
             return "path"
@@ -17,6 +24,7 @@ class Ftp_Common:
             return "file"
         else:
             return False
+    '''
 
 
 class Ftp_Exception(Exception):
