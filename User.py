@@ -18,10 +18,12 @@ class InvaidPassword(AuthException):
     pass
 
 class User:
-    def __init__(self,username,password):
+    def __init__(self,username,password,disk_quata,home_path):
         self.username = username
         self.password = self._encrypt_pw(password)
         self.is_logged_in = False
+        self.disk_quata = disk_quata
+        self.home_path = home_path
 
     def _encrypt_pw(self,password):
         hash_string = (self.username+password)
@@ -38,12 +40,13 @@ class User_Auth:
     def __init__(self):
         self.users = {}
 
-    def add_user(self,username,password):
+    def add_user(self,username,password,disk_quata,home_path):
         if username in self.users:
             raise UsernameAlraadyExists(username)
         if len(password) < 6:
             raise PasswordTooShort(username)
-        self.users[username] = User(username,password)
+        self.users[username] = User(username,password,disk_quata,home_path)
+
 
     def login(self,username,password):
         try:
