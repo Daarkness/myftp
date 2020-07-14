@@ -53,25 +53,17 @@ class nbNetBase:
     def read(self, fd):
         """fd is fileno() of socket"""
         #pdb.set_trace()
-        print("to read")
         try:
-            print("start read")
             sock_state = self.conn_state[fd]
-            print(sock_state)
             conn = sock_state.sock_obj
             if sock_state.need_read <= 0:
-                print("-----need_read < 0")
                 raise socket.error
             one_read = conn.recv(sock_state.need_read)
 
-            print("----",type(one_read))
             res_read = one_read.decode('utf-8')
 
-
-            print(res_read,"-------------")
             #dbgPrint("\tread func fd: %d, one_read: %s, need_read: %d" % (fd, one_read, sock_state.need_read))
 
-            print("res_read:{}".format(res_read))
             if len(one_read) == 0:
                 raise socket.error
 

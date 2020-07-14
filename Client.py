@@ -5,6 +5,7 @@ class Client_Net:
         self.host =  host
         self.port = port
         self.sock_l=[None]
+        print("init Client")
 
 
     def connect_server(self):

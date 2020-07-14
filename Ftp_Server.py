@@ -2,14 +2,15 @@ from nbNet.nbNetFramework import nbNet
 from Ftp_Com import Ftp_Common
 from User import User,User_Auth
 from server_conf import User_conf,Base_Dir,Disk_Quota
+import json
 
 
 import os
 class ftp_server(nbNet,Ftp_Common):
-    def __init__(self,ip,port,base_path):
+    def __init__(self,ip,port):
 
         self.Server = nbNet.__init__(self,ip,port,self.logic)
-        self.Ftp = Ftp_Common.__init__(self,base_path)
+        self.Ftp = Ftp_Common.__init__(self)
         self._Auth = User_Auth()
         self._Base_Path = os.path.join(os.getcwd(),"data")
         self.Token_Map={}
@@ -30,10 +31,25 @@ class ftp_server(nbNet,Ftp_Common):
         print("---init sussuss---")
 
     def logic(self,d_in):
+        row_msg_dict  = json.loads(d_in)
+        func_str = row_msg_dict['func']
+        data = row_msg_dict['data']
+        func_str = "_{}".format(func_str)
+        print(func_str)
+        if hasattr(self,func_str):
+            res_func = getattr(self,func_str)
+            res_func(data)
         return "123"
 
+    def _login(self,data):
+        print("="*120,"login")
+        print(data['username'],data['password'])
+        print(self._Auth.users['rico'].password)
 
-server =ftp_server('0.0.0.0',8000,os.path.join(os.getcwd(),"data"))
+        if self._Auth.login(data['username'],data['password']):
+            "login sussuss"
+            "return token"
+            print("123")
+server =ftp_server('0.0.0.0',8000)
 server.run()
-
 

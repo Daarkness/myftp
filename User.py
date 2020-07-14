@@ -18,7 +18,7 @@ class InvaidPassword(AuthException):
     pass
 
 class User:
-    def __init__(self,username,password,disk_quata,home_path):
+    def __init__(self,username,password,disk_quata=None,home_path=None):
         self.username = username
         self.password = self._encrypt_pw(password)
         self.is_logged_in = False
@@ -34,6 +34,9 @@ class User:
     def check_password(self,password):
         encry_str = self._encrypt_pw(password)
         return encry_str == password
+
+    def ftp_check_password(self,password):
+        return self.password == password
 
 
 class User_Auth:
@@ -54,12 +57,8 @@ class User_Auth:
         except KeyError:
             raise InvaidUserName(username)
 
-        if not user.check_password(password):
+        if not user.ftp_check_password(password):
             raise InvaidPassword(username,user)
         user.is_logged_in = True
         return True
-
-
-
-
 
